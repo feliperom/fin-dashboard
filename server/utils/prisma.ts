@@ -2,6 +2,8 @@
 import { PrismaClient } from '@prisma/client'
 
 const prismaClientSingleton = () => {
+  // DATABASE_URL já vem do schema.prisma via env("DATABASE_URL")
+  // O Prisma Client usa automaticamente a variável de ambiente
   return new PrismaClient()
 }
 
