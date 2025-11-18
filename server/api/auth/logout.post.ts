@@ -1,0 +1,8 @@
+// server/api/auth/logout.post.ts
+import { clearSessionCookie } from '~/server/utils/auth'
+
+export default defineEventHandler(async (event) => {
+  clearSessionCookie(event)
+  return { success: true }
+})
+
