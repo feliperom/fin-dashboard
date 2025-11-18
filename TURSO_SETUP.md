@@ -83,7 +83,53 @@ datasource db {
    - `prisma migrate deploy` - Aplica as migrações
    - `nuxt build` - Build da aplicação
 
-### 7. Verificar Deploy
+### 7. Aplicar Migrações no Turso
+
+**IMPORTANTE**: As migrações do Prisma não são aplicadas automaticamente no Turso durante o build. Você precisa aplicá-las manualmente:
+
+#### Opção 1: Via Turso CLI (Recomendado)
+
+```bash
+# Instalar Turso CLI (se ainda não tiver)
+curl -sSfL https://get.tur.so/install.sh | bash
+
+# Fazer login
+turso auth login
+
+# Listar seus bancos
+turso db list
+
+# Aplicar migrações
+# Para cada arquivo de migração em prisma/migrations/:
+turso db shell fin-dashboard-feliperom < prisma/migrations/20251118204751_add_user_auth/migration.sql
+
+# Ou aplicar todas de uma vez:
+for migration in prisma/migrations/*/migration.sql; do
+  turso db shell fin-dashboard-feliperom < "$migration"
+done
+```
+
+#### Opção 2: Via Turso Studio
+
+1. Acesse [turso.tech](https://turso.tech) e faça login
+2. Selecione seu banco de dados
+3. Vá em "SQL Editor"
+4. Cole o conteúdo de cada arquivo de migração e execute
+
+#### Opção 3: Script Automatizado
+
+Crie um script `scripts/apply-turso-migrations.sh`:
+
+```bash
+#!/bin/bash
+DB_NAME="fin-dashboard-feliperom"
+for migration in prisma/migrations/*/migration.sql; do
+  echo "Aplicando: $migration"
+  turso db shell $DB_NAME < "$migration"
+done
+```
+
+### 8. Verificar Deploy
 
 1. Após o deploy, você receberá uma URL (ex: `fin-dashboard.vercel.app`)
 2. Acesse a URL e teste:
