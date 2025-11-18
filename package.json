@@ -20,7 +20,7 @@
     "@nuxt/ui": "^2.15.0",
     "@pinia/nuxt": "^0.5.1",
     "@prisma/adapter-libsql": "^6.19.0",
-    "@prisma/client": "^5.19.0",
+    "@prisma/client": "^6.19.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "chart.js": "^4.4.4",
@@ -32,6 +32,6 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "prisma": "^5.19.0"
+    "prisma": "^6.19.0"
   }
 }
