@@ -1,5 +1,30 @@
 # Troubleshooting - Vercel
 
+## Problema: Erro de validação do Prisma com Turso
+
+### Sintomas
+```
+Invalid `prisma.user.findUnique()` invocation:
+error: Error validating datasource `db`: the URL must start with the protocol `file:`.
+```
+
+### Causa
+O Prisma valida a URL do banco durante `prisma generate` e rejeita URLs `libsql://` porque o provider `sqlite` espera URLs `file:`.
+
+### Solução
+O projeto já está configurado para resolver isso automaticamente:
+1. O script `scripts/vercel-build.js` detecta Turso e usa uma URL temporária durante `prisma generate`
+2. O `server/utils/prisma.ts` usa o adapter `@prisma/adapter-libsql` em runtime quando detecta `libsql://`
+3. O Prisma Client em runtime usa a URL real do Turso através do adapter
+
+**Não é necessário fazer nada** - o build já está configurado corretamente.
+
+### Verificação
+Se ainda ocorrer o erro:
+1. Verifique se `@prisma/adapter-libsql` está instalado: `npm list @prisma/adapter-libsql`
+2. Verifique se o script `vercel-build` está sendo usado no `package.json`
+3. Verifique os logs de build no Vercel para confirmar que o script está rodando
+
 ## Problema: API não funciona em produção
 
 ### Sintomas

@@ -30,23 +30,22 @@ O Vercel é uma plataforma **serverless**, o que significa que o sistema de arqu
 3. Crie um novo banco de dados
 4. Copie a connection string (formato: `libsql://...`)
 
-#### 2. Atualizar Prisma Schema
+#### 2. Instalar Dependências
 
-O schema já está configurado para usar `DATABASE_URL`. Você só precisa:
+O projeto já está configurado para usar Turso. As dependências necessárias já estão instaladas:
+- `@libsql/client` - Driver do Turso
+- `@prisma/adapter-libsql` - Adapter do Prisma para Turso
 
-1. Instalar o driver do Turso:
-```bash
-npm install @libsql/client
-```
-
-2. Atualizar `prisma/schema.prisma`:
+O `prisma/schema.prisma` já está configurado com:
 ```prisma
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
-  relationMode = "prisma"  // Adicionar esta linha
+  relationMode = "prisma"
 }
 ```
+
+O Prisma Client está configurado para detectar automaticamente URLs `libsql://` e usar o adapter do Turso.
 
 #### 3. Configurar no Vercel
 
@@ -146,6 +145,13 @@ No painel do Vercel (Settings > Environment Variables), configure:
 - `NODE_ENV`: `production`
 
 ### Build Settings
+
+O projeto já está configurado com um script customizado `vercel-build` que:
+1. Detecta automaticamente se é Turso (`libsql://`) ou outro banco
+2. Usa uma URL temporária durante `prisma generate` para Turso (evita erro de validação)
+3. Restaura a URL original para runtime
+4. Executa as migrações apropriadas
+5. Faz o build do Nuxt
 
 O Vercel detecta automaticamente:
 - **Framework**: Nuxt.js
